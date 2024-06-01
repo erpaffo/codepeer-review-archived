@@ -72,9 +72,12 @@ gem 'figaro'
 
 gem 'webpacker'
 
-gem 'devise-two-factor'
-
 gem 'omniauth'
-gem 'omniauth-google-oauth2' 
+gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'
+
+gem 'twilio-ruby'
+gem 'rqrcode'
+gem 'rqrcode_png'
+gem 'rotp'

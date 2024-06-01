@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_01_142047) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_01_232053) do
   create_table "snippets", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -39,6 +39,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_01_142047) do
     t.string "image"
     t.string "token"
     t.string "refresh_token"
+    t.string "otp_secret_encrypted"
+    t.string "phone"
+    t.text "otp_backup_codes"
+    t.string "phone_number"
+    t.boolean "two_factor_enabled"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

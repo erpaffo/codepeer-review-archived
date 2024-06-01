@@ -7,9 +7,12 @@ Rails.application.routes.draw do
 
   authenticated :user do
     root 'pages#dashboard', as: :authenticated_root
-    post 'enable_two_factor', to: 'users#enable_two_factor'
-    post 'disable_two_factor', to: 'users#disable_two_factor'
-    get 'connect_account', to: 'users#connect_account'
+    get 'settings', to: 'pages#settings'
+    get 'two_factor_authentication', to: 'two_factor_authentication#show'
+    post 'two_factor_authentication/enable', to: 'two_factor_authentication#enable'
+    post 'two_factor_authentication/disable', to: 'two_factor_authentication#disable'
+    post 'two_factor_authentication/send_otp_via_email', to: 'two_factor_authentication#send_otp_via_email'
+    post 'two_factor_authentication/send_otp_via_sms', to: 'two_factor_authentication#send_otp_via_sms'
   end
 
   unauthenticated do
@@ -22,6 +25,7 @@ Rails.application.routes.draw do
   get 'community', to: 'community#index'
   get 'badges', to: 'badges#index'
   get 'resume_snippet', to: 'snippets#resume'
+  get 'connect_account', to: 'users#connect_account'
 
   resources :snippets, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 end

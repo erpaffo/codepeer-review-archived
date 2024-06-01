@@ -1,0 +1,29 @@
+<h1>Two-Factor Authentication</h1>
+
+<p>Choose your preferred method of two-factor authentication:</p>
+
+<%= form_with url: two_factor_authentication_enable_path, method: :post do %>
+  <p>
+    <%= label_tag :otp_code, "Enter the OTP code" %><br>
+    <%= text_field_tag :otp_code %>
+  </p>
+  <p>
+    <%= submit_tag "Enable 2FA" %>
+  </p>
+<% end %>
+
+<p>
+  <%= image_tag @qr_code.to_data_url, alt: 'QR Code for Google Authenticator' %>
+</p>
+
+<%= form_with url: two_factor_authentication_send_otp_via_email_path, method: :post do %>
+  <p>
+    <%= submit_tag "Send OTP via Email" %>
+  </p>
+<% end %>
+
+<%= form_with url: two_factor_authentication_send_otp_via_sms_path, method: :post do %>
+  <p>
+    <%= submit_tag "Send OTP via SMS" %>
+  </p>
+<% end %>
