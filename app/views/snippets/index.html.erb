@@ -1,0 +1,15 @@
+<h1>My Snippets</h1>
+<%= form_with(url: snippets_path, method: :get, local: true) do %>
+  <%= text_field_tag :search, params[:search], placeholder: 'Search snippets' %>
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<div class="snippet-list">
+  <% @snippets.each do |snippet| %>
+    <div class="snippet">
+      <%= link_to snippet.title, snippet_path(snippet) %>
+      <%= link_to 'Edit', edit_snippet_path(snippet) %>
+      <%= link_to 'Delete', snippet_path(snippet), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </div>
+  <% end %>
+</div>

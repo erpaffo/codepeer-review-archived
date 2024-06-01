@@ -1,0 +1,10 @@
+<h1>Dashboard</h1>
+<div class="dashboard-tiles">
+  <%= link_to "My Snippets", snippets_path, class: "tile" %> <!-- Use snippets_path for the list of snippets -->
+  <%= link_to "Resume Snippet", resume_snippet_path, class: "tile" %> <!-- Assuming you have a resume action in SnippetsController -->
+  <%= link_to "My Profile", profile_path, class: "tile" %>
+  <%= link_to "My Badges", badges_path, class: "tile" %>
+  <%= link_to "Community Activity", community_path, class: "tile" %>
+  <%= link_to "Settings", settings_path, class: "tile" %>
+  <%= link_to "Connect Account", connect_account_path, class: "tile" %>
+</div>

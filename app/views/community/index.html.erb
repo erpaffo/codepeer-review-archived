@@ -1,0 +1,8 @@
+<h1>Community Activity</h1>
+<div class="activity-feed">
+  <% @activities.each do |activity| %>
+    <div class="activity">
+      <p><%= activity.description %></p>
+    </div>
+  <% end %>
+</div>

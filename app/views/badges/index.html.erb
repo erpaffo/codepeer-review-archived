@@ -1,0 +1,24 @@
+<h1>My Badges</h1>
+<div class="badges">
+  <div class="left-side">
+    <div class="favorite-badge">
+      <!-- Favorite badge goes here -->
+    </div>
+  </div>
+  <div class="right-side">
+    <div class="badge-summary">
+      <h2>Earned Badges</h2>
+      <ul>
+        <% @badges.earned.each do |badge| %>
+          <li><%= badge.name %></li>
+        <% end %>
+      </ul>
+      <h2>Available Badges</h2>
+      <ul>
+        <% @badges.available.each do |badge| %>
+          <li><%= badge.name %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

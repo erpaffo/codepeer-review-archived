@@ -1,0 +1,14 @@
+<!-- app/views/devise/registrations/edit.html.erb -->
+<h2>Complete Registration</h2>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= f.label :nickname %>
+  <%= f.text_field :nickname %>
+  
+  <%= f.label :first_name %>
+  <%= f.text_field :first_name %>
+  
+  <%= f.label :last_name %>
+  <%= f.text_field :last_name %>
+  
+  <%= f.submit "Complete Registration" %>
+<% end %>

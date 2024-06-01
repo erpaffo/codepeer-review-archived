@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@rails/webpacker": "5.4.4",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "webpack-dev-server": "^3"
+  }
+}
