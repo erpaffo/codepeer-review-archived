@@ -1,44 +1,95 @@
-require 'rotp'
-require 'rqrcode'
-
 class TwoFactorAuthenticationController < ApplicationController
   before_action :authenticate_user!
 
   def show
     @user = current_user
-    totp = ROTP::TOTP.new(@user.otp_secret, issuer: "Codepeer Review")
-    @qr_code = RQRCode::QRCode.new(totp.provisioning_uri(@user.email)).as_png(size: 200)
+    @enabled_methods = enabled_two_factor_methods
+    @available_methods = available_two_factor_methods
+    @qr_code = generate_qr_code if @enabled_methods.include?('app')
   end
 
-  def enable
+  def send_otp
     @user = current_user
+    method = params[:two_factor_method]
 
-    if params[:otp_code] == ROTP::TOTP.new(@user.otp_secret).now
-      @user.update(two_factor_enabled: true)
-      redirect_to settings_path, notice: 'Two-factor authentication enabled'
+    if method == 'email'
+      @user.send_otp_via_email
+      flash[:notice] = 'OTP sent via email successfully'
+      redirect_to verify_otp_two_factor_authentication_form_path(two_factor_method: method)
+    elsif method == 'sms'
+      phone_number = params[:phone_number]
+      if phone_number.present? && valid_phone_number?(phone_number)
+        @user.update(phone_number: phone_number)
+        @user.send_otp_via_sms
+        flash[:notice] = 'OTP sent via SMS successfully'
+        redirect_to verify_otp_two_factor_authentication_form_path(two_factor_method: method)
+      else
+        flash[:alert] = 'Invalid phone number'
+        redirect_to two_factor_authentication_path
+      end
+    elsif method == 'app'
+      @qr_code = generate_qr_code
+      flash[:notice] = 'Scan the QR code with your Authenticator app'
+      redirect_to qr_code_two_factor_authentication_path
+    end
+  end
+
+  def verify_otp_form
+    @two_factor_method = params[:two_factor_method]
+  end
+
+  def verify_otp
+    @user = current_user
+    method = params[:two_factor_method]
+
+    if ROTP::TOTP.new(@user.otp_secret).verify(params[:otp_code])
+      @user.update(two_factor_enabled: true, two_factor_method: method)
+      flash[:notice] = 'Two-factor authentication enabled successfully'
+      redirect_to authenticated_root_path
     else
-      redirect_to two_factor_authentication_path, alert: 'Invalid OTP code'
+      flash[:alert] = 'Invalid OTP code'
+      redirect_to verify_otp_two_factor_authentication_form_path(two_factor_method: method)
     end
   end
 
   def disable
     @user = current_user
+    method = params[:two_factor_method]
 
-    if params[:otp_code] == ROTP::TOTP.new(@user.otp_secret).now
-      @user.update(two_factor_enabled: false)
-      redirect_to settings_path, notice: 'Two-factor authentication disabled'
-    else
-      redirect_to two_factor_authentication_path, alert: 'Invalid OTP code'
+    if method == 'email'
+      @user.update(two_factor_enabled: false, two_factor_method: nil)
+      flash[:notice] = 'Two-factor authentication via email disabled successfully'
+    elsif method == 'sms'
+      @user.update(two_factor_enabled: false, two_factor_method: nil, phone_number: nil)
+      flash[:notice] = 'Two-factor authentication via SMS disabled successfully'
+    elsif method == 'app'
+      @user.update(two_factor_enabled: false, two_factor_method: nil, otp_secret: nil)
+      flash[:notice] = 'Two-factor authentication via Authenticator app disabled successfully'
     end
+
+    redirect_to two_factor_authentication_path
   end
 
-  def send_otp_via_email
-    current_user.send_otp_via_email
-    redirect_to two_factor_authentication_path, notice: 'OTP sent via email'
+  private
+
+  def valid_phone_number?(phone_number)
+    phone_number.match?(/\A\+?[1-9]\d{1,14}\z/)
   end
 
-  def send_otp_via_sms
-    current_user.send_otp_via_sms
-    redirect_to two_factor_authentication_path, notice: 'OTP sent via SMS'
+  def enabled_two_factor_methods
+    methods = []
+    methods << 'email' if current_user.two_factor_method == 'email'
+    methods << 'sms' if current_user.two_factor_method == 'sms'
+    methods << 'app' if current_user.two_factor_method == 'app'
+    methods
+  end
+
+  def available_two_factor_methods
+    ['email', 'sms', 'app'] - enabled_two_factor_methods
+  end
+
+  def generate_qr_code
+    totp = ROTP::TOTP.new(current_user.otp_secret, issuer: "Codepeer Review")
+    RQRCode::QRCode.new(totp.provisioning_uri(current_user.email)).as_png(size: 200)
   end
 end

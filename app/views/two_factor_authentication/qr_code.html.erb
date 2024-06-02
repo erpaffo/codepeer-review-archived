@@ -1,0 +1,23 @@
+<h1>Authenticator App Setup</h1>
+
+<p>Scan the QR code with your authenticator app and enter the OTP below:</p>
+
+<% if @qr_code %>
+  <p>
+    <%= image_tag @qr_code.to_data_url, alt: 'QR Code for Google Authenticator' %>
+  </p>
+<% end %>
+
+<%= form_with url: verify_otp_two_factor_authentication_path, method: :post, local: true do %>
+  <%= hidden_field_tag :two_factor_method, 'app' %>
+  <p>
+    <%= label_tag :otp_code, "Enter the OTP code" %><br>
+    <%= text_field_tag :otp_code %>
+  </p>
+  <p>
+    <%= submit_tag "Verify OTP" %>
+  </p>
+  <% if flash[:alert] %>
+    <div class="alert"><%= flash[:alert] %></div>
+  <% end %>
+<% end %>

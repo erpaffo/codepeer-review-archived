@@ -9,10 +9,15 @@ Rails.application.routes.draw do
     root 'pages#dashboard', as: :authenticated_root
     get 'settings', to: 'pages#settings'
     get 'two_factor_authentication', to: 'two_factor_authentication#show'
+    post 'two_factor_authentication/send_otp', to: 'two_factor_authentication#send_otp', as: :send_otp_two_factor_authentication
+    get 'two_factor_authentication/verify_otp', to: 'two_factor_authentication#verify_otp_form', as: :verify_otp_two_factor_authentication_form
+    post 'two_factor_authentication/verify_otp', to: 'two_factor_authentication#verify_otp', as: :verify_otp_two_factor_authentication
+    get 'two_factor_authentication/qr_code', to: 'two_factor_authentication#qr_code', as: :qr_code_two_factor_authentication
     post 'two_factor_authentication/enable', to: 'two_factor_authentication#enable'
-    post 'two_factor_authentication/disable', to: 'two_factor_authentication#disable'
-    post 'two_factor_authentication/send_otp_via_email', to: 'two_factor_authentication#send_otp_via_email'
-    post 'two_factor_authentication/send_otp_via_sms', to: 'two_factor_authentication#send_otp_via_sms'
+    post 'two_factor_authentication/disable', to: 'two_factor_authentication#disable', as: :disable_two_factor_authentication
+    get 'two_factor_verification', to: 'two_factor_verifications#show'
+    post 'two_factor_verification/verify', to: 'two_factor_verifications#verify'
+    post 'two_factor_verification/send_otp', to: 'two_factor_authentication#send_otp'
   end
 
   unauthenticated do

@@ -2,28 +2,29 @@
 
 <p>Choose your preferred method of two-factor authentication:</p>
 
-<%= form_with url: two_factor_authentication_enable_path, method: :post do %>
+<%= form_with url: send_otp_two_factor_authentication_path, method: :post, local: true do |form| %>
   <p>
-    <%= label_tag :otp_code, "Enter the OTP code" %><br>
-    <%= text_field_tag :otp_code %>
+    <%= label_tag :two_factor_method, "Choose method" %><br>
+    <%= select_tag :two_factor_method, options_for_select(@available_methods.map { |method| [method.capitalize, method] }), id: "two_factor_method" %>
   </p>
+  <div id="phone_number_field" style="display: none;">
+    <%= label_tag :phone_number, "Enter your phone number" %><br>
+    <%= text_field_tag :phone_number %>
+  </div>
   <p>
-    <%= submit_tag "Enable 2FA" %>
-  </p>
-<% end %>
-
-<p>
-  <%= image_tag @qr_code.to_data_url, alt: 'QR Code for Google Authenticator' %>
-</p>
-
-<%= form_with url: two_factor_authentication_send_otp_via_email_path, method: :post do %>
-  <p>
-    <%= submit_tag "Send OTP via Email" %>
+    <%= submit_tag "Send OTP" %>
   </p>
 <% end %>
 
-<%= form_with url: two_factor_authentication_send_otp_via_sms_path, method: :post do %>
+<% @enabled_methods.each do |method| %>
   <p>
-    <%= submit_tag "Send OTP via SMS" %>
+    Two-factor authentication via <%= method.capitalize %> is enabled.
+    <%= button_to "Disconnect", disable_two_factor_authentication_path(two_factor_method: method), method: :post, data: { confirm: "Are you sure you want to disable two-factor authentication via #{method.capitalize}?" } %>
+  </p>
+<% end %>
+
+<% if @qr_code %>
+  <p>
+    <%= image_tag @qr_code.to_data_url, alt: 'QR Code for Google Authenticator' %>
   </p>
 <% end %>

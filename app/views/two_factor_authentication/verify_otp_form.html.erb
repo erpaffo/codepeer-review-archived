@@ -1,0 +1,28 @@
+<h1>Verify OTP</h1>
+
+<div id="error-messages" style="color: red;">
+  <% if flash[:alert] %>
+    <p><%= flash[:alert] %></p>
+  <% end %>
+</div>
+
+<%= form_with url: verify_otp_two_factor_authentication_path, method: :post, local: true do %>
+  <%= hidden_field_tag :two_factor_method, params[:two_factor_method] %>
+  <% if params[:two_factor_method] == 'sms' %>
+    <%= hidden_field_tag :phone_number, params[:phone_number] %>
+  <% end %>
+  <p>
+    <%= label_tag :otp_code, "Enter the OTP code" %><br>
+    <%= text_field_tag :otp_code %>
+  </p>
+  <p>
+    <%= submit_tag "Verify OTP" %>
+  </p>
+<% end %>
+
+<%= form_with url: send_otp_two_factor_authentication_path, method: :post, local: true do %>
+  <p>
+    <%= hidden_field_tag :two_factor_method, params[:two_factor_method] %>
+    <%= submit_tag "Resend OTP" %>
+  </p>
+<% end %>
