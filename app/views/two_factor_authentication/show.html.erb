@@ -19,7 +19,10 @@
 <% @enabled_methods.each do |method| %>
   <p>
     Two-factor authentication via <%= method.capitalize %> is enabled.
-    <%= button_to "Disconnect", disable_two_factor_authentication_path(two_factor_method: method), method: :post, data: { confirm: "Are you sure you want to disable two-factor authentication via #{method.capitalize}?" } %>
+    <%= form_with url: disable_two_factor_authentication_path, method: :post, local: true do %>
+      <%= hidden_field_tag :two_factor_method, method %>
+      <%= submit_tag "Disable #{method.capitalize} 2FA" %>
+    <% end %>
   </p>
 <% end %>
 

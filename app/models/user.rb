@@ -1,5 +1,4 @@
 require 'rotp'
-require 'twilio-ruby'
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,

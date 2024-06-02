@@ -12,11 +12,12 @@ class TwoFactorAuthenticationController < ApplicationController
     @user = current_user
     method = params[:two_factor_method]
 
-    if method == 'email'
+    case method
+    when 'email'
       @user.send_otp_via_email
       flash[:notice] = 'OTP sent via email successfully'
       redirect_to verify_otp_two_factor_authentication_form_path(two_factor_method: method)
-    elsif method == 'sms'
+    when 'sms'
       phone_number = params[:phone_number]
       if phone_number.present? && valid_phone_number?(phone_number)
         @user.update(phone_number: phone_number)
@@ -27,7 +28,7 @@ class TwoFactorAuthenticationController < ApplicationController
         flash[:alert] = 'Invalid phone number'
         redirect_to two_factor_authentication_path
       end
-    elsif method == 'app'
+    when 'app'
       @qr_code = generate_qr_code
       flash[:notice] = 'Scan the QR code with your Authenticator app'
       redirect_to qr_code_two_factor_authentication_path
@@ -42,8 +43,9 @@ class TwoFactorAuthenticationController < ApplicationController
     @user = current_user
     method = params[:two_factor_method]
 
-    if ROTP::TOTP.new(@user.otp_secret).verify(params[:otp_code])
+    if @user.otp_code == params[:otp_code] && @user.otp_sent_at > 10.minutes.ago
       @user.update(two_factor_enabled: true, two_factor_method: method)
+      session[:two_factor_verified] = true
       flash[:notice] = 'Two-factor authentication enabled successfully'
       redirect_to authenticated_root_path
     else
@@ -52,16 +54,17 @@ class TwoFactorAuthenticationController < ApplicationController
     end
   end
 
+  def resend_otp
+    send_otp
+  end
+
   def disable
     @user = current_user
     method = params[:two_factor_method]
 
-    if method == 'email'
+    if method == 'email' || method == 'sms'
       @user.update(two_factor_enabled: false, two_factor_method: nil)
-      flash[:notice] = 'Two-factor authentication via email disabled successfully'
-    elsif method == 'sms'
-      @user.update(two_factor_enabled: false, two_factor_method: nil, phone_number: nil)
-      flash[:notice] = 'Two-factor authentication via SMS disabled successfully'
+      flash[:notice] = "Two-factor authentication via #{method} disabled successfully"
     elsif method == 'app'
       @user.update(two_factor_enabled: false, two_factor_method: nil, otp_secret: nil)
       flash[:notice] = 'Two-factor authentication via Authenticator app disabled successfully'

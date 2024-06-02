@@ -6,7 +6,7 @@
   <% end %>
 </div>
 
-<%= form_with url: verify_otp_two_factor_authentication_path, method: :post, local: true do %>
+<%= form_with url: two_factor_verification_verify_path, method: :post, local: true do %>
   <p>
     <%= label_tag :otp_code, "Enter the OTP code" %><br>
     <%= text_field_tag :otp_code %>
@@ -15,10 +15,8 @@
     <%= submit_tag "Verify OTP" %>
   </p>
 <% end %>
-
-<%= form_with url: send_otp_two_factor_authentication_path, method: :post, local: true do %>
+<%= form_with url: two_factor_verification_send_otp_path, method: :post, local: true do %>
   <p>
-    <%= hidden_field_tag :two_factor_method, session[:otp_method] %>
     <%= submit_tag "Resend OTP" %>
   </p>
 <% end %>
