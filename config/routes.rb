@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     post 'two_factor_authentication/disable', to: 'two_factor_authentication#disable', as: :disable_two_factor_authentication
     post 'two_factor_verification/send_otp', to: 'two_factor_verifications#resend_otp', as: :two_factor_verification_send_otp
     get 'two_factor_verification', to: 'two_factor_verifications#show'
-    post 'two_factor_verification/verify', to: 'two_factor_verifications#verify'
+    post 'two_factor_verification/verify', to: 'two_factor_verifications#verify', as: :two_factor_verification_verify
   end
 
   unauthenticated do

@@ -4,7 +4,7 @@
 
 <% if @qr_code %>
   <p>
-    <%= image_tag @qr_code.to_data_url, alt: 'QR Code for Google Authenticator' %>
+    <%= image_tag @qr_code, alt: 'QR Code for Google Authenticator' %>
   </p>
 <% end %>
 

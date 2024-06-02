@@ -1,5 +1,5 @@
 class TwoFactorVerificationsController < ApplicationController
-  skip_before_action :check_two_factor_authentication
+  skip_before_action :check_two_factor_authentication, only: [:show, :verify, :resend_otp]
 
   def show
     @user = current_user
@@ -9,8 +9,11 @@ class TwoFactorVerificationsController < ApplicationController
 
   def verify
     @user = current_user
-    if @user.otp_code == params[:otp_code] && @user.otp_sent_at > 10.minutes.ago
+    totp = ROTP::TOTP.new(@user.otp_secret)
+
+    if totp.verify(params[:otp_code], drift_behind: 15, drift_ahead: 15)
       session[:two_factor_verified] = true
+      flash[:notice] = 'Two-factor authentication successful'
       redirect_to authenticated_root_path
     else
       flash.now[:alert] = 'Invalid OTP code'

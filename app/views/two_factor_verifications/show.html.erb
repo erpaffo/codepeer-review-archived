@@ -15,6 +15,7 @@
     <%= submit_tag "Verify OTP" %>
   </p>
 <% end %>
+
 <%= form_with url: two_factor_verification_send_otp_path, method: :post, local: true do %>
   <p>
     <%= submit_tag "Resend OTP" %>

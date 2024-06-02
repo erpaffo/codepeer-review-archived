@@ -5,7 +5,11 @@ class TwoFactorAuthenticationController < ApplicationController
     @user = current_user
     @enabled_methods = enabled_two_factor_methods
     @available_methods = available_two_factor_methods
-    @qr_code = generate_qr_code if @enabled_methods.include?('app')
+
+    if @enabled_methods.include?('app')
+      totp = ROTP::TOTP.new(@user.otp_secret, issuer: "Codepeer Review")
+      @qr_code = RQRCode::QRCode.new(totp.provisioning_uri(@user.email)).as_png(size: 200).to_data_url
+    end
   end
 
   def send_otp
@@ -29,10 +33,15 @@ class TwoFactorAuthenticationController < ApplicationController
         redirect_to two_factor_authentication_path
       end
     when 'app'
-      @qr_code = generate_qr_code
+      totp = ROTP::TOTP.new(@user.otp_secret, issuer: "Codepeer Review")
+      @qr_code = RQRCode::QRCode.new(totp.provisioning_uri(@user.email)).as_png(size: 200).to_data_url
       flash[:notice] = 'Scan the QR code with your Authenticator app'
-      redirect_to qr_code_two_factor_authentication_path
+      redirect_to qr_code_two_factor_authentication_path(qr_code: @qr_code)
     end
+  end
+
+  def qr_code
+    @qr_code = params[:qr_code]
   end
 
   def verify_otp_form
@@ -42,15 +51,16 @@ class TwoFactorAuthenticationController < ApplicationController
   def verify_otp
     @user = current_user
     method = params[:two_factor_method]
+    totp = ROTP::TOTP.new(@user.otp_secret)
 
-    if @user.otp_code == params[:otp_code] && @user.otp_sent_at > 10.minutes.ago
+    if totp.verify(params[:otp_code], drift_behind: 15, drift_ahead: 15)
       @user.update(two_factor_enabled: true, two_factor_method: method)
       session[:two_factor_verified] = true
       flash[:notice] = 'Two-factor authentication enabled successfully'
       redirect_to authenticated_root_path
     else
       flash[:alert] = 'Invalid OTP code'
-      redirect_to verify_otp_two_factor_authentication_form_path(two_factor_method: method)
+      redirect_to qr_code_two_factor_authentication_path
     end
   end
 
@@ -89,10 +99,5 @@ class TwoFactorAuthenticationController < ApplicationController
 
   def available_two_factor_methods
     ['email', 'sms', 'app'] - enabled_two_factor_methods
-  end
-
-  def generate_qr_code
-    totp = ROTP::TOTP.new(current_user.otp_secret, issuer: "Codepeer Review")
-    RQRCode::QRCode.new(totp.provisioning_uri(current_user.email)).as_png(size: 200)
   end
 end
