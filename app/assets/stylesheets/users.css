@@ -1,0 +1,41 @@
+/* app/assets/stylesheets/users.css */
+.profile-container, .edit-profile-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .profile-left {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .profile-right {
+    flex: 2;
+  }
+  
+  .profile-icon {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+  }
+  
+  .edit-profile-btn {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .profile-section {
+    margin: 20px 0;
+  }
+  
+  .badges-section {
+    margin-top: 30px;
+  }
+  
+  .badge-icon {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+  }
+  

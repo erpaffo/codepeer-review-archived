@@ -10,9 +10,10 @@ class User < ApplicationRecord
   before_create :generate_otp_secret
   before_save :generate_otp_secret, if: :otp_secret_nil?
 
-  # Validations
   validates :terms_of_service, acceptance: true, on: :create
+  enum role: { user: 0, admin: 1 }
 
+  # 2FA
   def generate_otp_secret
     self.otp_secret = ROTP::Base32.random_base32
   end
@@ -66,4 +67,22 @@ class User < ApplicationRecord
   def generate_otp
     ROTP::TOTP.new(self.otp_secret).now
   end
+
+  # Followers
+  has_many :follower_relationships, foreign_key: :followed_id, class_name: 'Follow'
+  has_many :followers, through: :follower_relationships, source: :follower
+
+  has_many :following_relationships, foreign_key: :follower_id, class_name: 'Follow'
+  has_many :following, through: :following_relationships, source: :followed
+
+  def followers_count
+    followers.count
+  end
+
+  def following_count
+    following.count
+  end
+
+  # Badges
+  has_and_belongs_to_many :badges
 end

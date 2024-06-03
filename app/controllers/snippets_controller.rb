@@ -1,5 +1,6 @@
 class SnippetsController < ApplicationController
   before_action :authenticate_user!
+  load_and_authorize_resource
 
   def index
     @snippets = current_user.snippets

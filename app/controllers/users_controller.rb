@@ -1,22 +1,28 @@
+# app/controllers/users_controller.rb
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  load_and_authorize_resource
 
-  def profile
-    # Profile logic here
+  def show
+    @user = current_user
   end
 
-  def connect_account
-    # Logic for connecting accounts (GitHub, GitLab) here
+  def edit
+    @user = current_user
   end
 
-  def enable_two_factor
-    current_user.update!(otp_required_for_login: true)
-    current_user.update!(otp_secret: User.generate_otp_secret)
-    redirect_to user_two_factor_setup_path, notice: '2FA enabled. Scan the QR code with your 2FA app.'
+  def update
+    @user = current_user
+    if @user.update(user_params)
+      redirect_to profile_path, notice: 'Profile updated successfully.'
+    else
+      render :edit
+    end
   end
 
-  def disable_two_factor
-    current_user.update!(otp_required_for_login: false)
-    redirect_to user_two_factor_setup_path, notice: '2FA disabled.'
+  private
+
+  def user_params
+    params.require(:user).permit(:name, :surname, :nickname, :image, :phone_number, :password, :password_confirmation)
   end
 end
