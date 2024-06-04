@@ -82,3 +82,4 @@ gem 'rqrcode'
 gem 'rqrcode_png'
 gem 'rotp'
 
+gem 'cancancan'

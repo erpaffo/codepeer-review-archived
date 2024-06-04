@@ -1,0 +1,32 @@
+<!-- app/views/users/show.html.erb -->
+<h1>My Profile</h1>
+<div class="profile-container">
+  <div class="profile-left">
+    <%= image_tag(@user.image, alt: 'User Icon', class: 'profile-icon', onclick: 'enlargeImage(this)') %>
+    <%= link_to 'Edit Profile', edit_profile_path, class: 'edit-profile-btn' %>
+    <p>Followers: <%= @user.followers_count %></p>
+    <p>Following: <%= @user.following_count %></p>
+  </div>
+  <div class="profile-right">
+    <div class="profile-section">
+      <%= link_to 'My Snippets', my_snippets_path, class: 'profile-link' %>
+    </div>
+    <div class="profile-section">
+      <%= link_to 'My Contribution', my_contribution_path, class: 'profile-link' %>
+    </div>
+  </div>
+  <div class="badges-section">
+    <h2>Badges (Overview)</h2>
+    <% @user.badges.each do |badge| %>
+      <%= image_tag(badge.image, alt: badge.name, class: 'badge-icon') %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function enlargeImage(img) {
+    // Simple script to enlarge the profile icon when clicked
+    img.style.width = "200px";
+    img.style.height = "200px";
+  }
+</script>
