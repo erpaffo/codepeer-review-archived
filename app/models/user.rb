@@ -1,5 +1,3 @@
-require 'rotp'
-
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
@@ -9,11 +7,16 @@ class User < ApplicationRecord
   attr_accessor :terms_of_service
   before_create :generate_otp_secret
   before_save :generate_otp_secret, if: :otp_secret_nil?
+  before_save :ensure_nickname
 
   validates :terms_of_service, acceptance: true, on: :create
   enum role: { user: 0, admin: 1 }
 
-  # 2FA
+  has_many :snippets
+  has_one_attached :profile_picture
+
+  validate :profile_picture_validation
+
   def generate_otp_secret
     self.otp_secret = ROTP::Base32.random_base32
   end
@@ -47,16 +50,12 @@ class User < ApplicationRecord
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
-      user.name = auth.info.name   # assuming the user model has a name
-      user.surname = auth.info.last_name # assuming the user model has a surname
-      user.nickname = auth.info.nickname # assuming the user model has a nickname
-      user.image = auth.info.image # assuming the user model has an image
-      user.skip_confirmation!      # don't require email confirmation
+      user.nickname = auth.info.nickname || auth.info.email.split('@').first
+      user.image = auth.info.image
+      user.skip_confirmation!
     end.tap do |user|
       user.update(
-        name: auth.info.name,
-        surname: auth.info.last_name,
-        nickname: auth.info.nickname,
+        nickname: auth.info.nickname || user.nickname,
         image: auth.info.image,
         token: auth.credentials.token,
         refresh_token: auth.credentials.refresh_token
@@ -85,4 +84,30 @@ class User < ApplicationRecord
 
   # Badges
   has_and_belongs_to_many :badges
+
+  def profile_picture_url
+    if profile_picture.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(profile_picture, only_path: true)
+    elsif image.present?
+      image
+    else
+      ActionController::Base.helpers.asset_path('default_profile_image.png')
+    end
+  end
+
+  private
+
+  def profile_picture_validation
+    if profile_picture.attached?
+      if profile_picture.blob.byte_size > 1.megabyte
+        errors.add(:profile_picture, 'must be less than 1MB')
+      elsif !profile_picture.blob.content_type.starts_with?('image/')
+        errors.add(:profile_picture, 'must be an image')
+      end
+    end
+  end
+
+  def ensure_nickname
+    self.nickname = email.split('@').first if nickname.blank?
+  end
 end

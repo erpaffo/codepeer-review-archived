@@ -1,44 +1,47 @@
-<!-- app/views/users/edit.html.erb -->
 <h1>Edit Profile</h1>
 <div class="edit-profile-container">
-  <%= form_with(model: @user, url: profile_path, method: :patch, local: true) do |form| %>
+  <%= form_for @user, url: profile_path, method: :patch, html: { multipart: true } do |f| %>
     <div class="field">
-      <%= form.label :name %>
-      <%= form.text_field :name %>
+      <%= f.label :nickname, "Nickname" %>
+      <%= f.text_field :nickname, value: @user.nickname, class: "form-control" %>
     </div>
 
     <div class="field">
-      <%= form.label :surname %>
-      <%= form.text_field :surname %>
+      <%= f.label :bio, "Bio" %>
+      <%= f.text_area :bio, value: @user.bio, class: "form-control", rows: 5 %>
     </div>
 
     <div class="field">
-      <%= form.label :nickname %>
-      <%= form.text_field :nickname %>
-    </div>
-
-    <div class="field">
-      <%= form.label :image %>
-      <%= form.file_field :image %>
-    </div>
-
-    <div class="field">
-      <%= form.label :phone_number %>
-      <%= form.text_field :phone_number %>
-    </div>
-
-    <div class="field">
-      <%= form.label :password %>
-      <%= form.password_field :password %>
-    </div>
-
-    <div class="field">
-      <%= form.label :password_confirmation %>
-      <%= form.password_field :password_confirmation %>
+      <%= f.label :profile_picture, "Profile Picture" %>
+      <%= f.file_field :profile_picture, accept: 'image/*', class: "form-control", id: "profile-picture-input" %>
+      <img id="profile-picture-preview" src="<%= @user.profile_picture_url if @user.profile_picture.attached? %>" alt="Profile Picture Preview" style="<%= @user.profile_picture.attached? ? 'display:block;' : 'display:none;' %>"/>
     </div>
 
     <div class="actions">
-      <%= form.submit "Update Profile" %>
+      <%= f.submit "Update Profile", class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const profilePictureInput = document.getElementById('profile-picture-input');
+    const profilePicturePreview = document.getElementById('profile-picture-preview');
+
+    profilePictureInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file && file.size <= 1048576) { // 1 MB limit
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePicturePreview.src = e.target.result;
+          profilePicturePreview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      } else {
+        alert("Image must be less than 1MB");
+        profilePictureInput.value = ''; // Clear the input
+        profilePicturePreview.style.display = 'none';
+      }
+    });
+  });
+</script>

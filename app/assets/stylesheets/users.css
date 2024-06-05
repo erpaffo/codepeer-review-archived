@@ -1,41 +1,34 @@
-/* app/assets/stylesheets/users.css */
-.profile-container, .edit-profile-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .profile-left {
-    flex: 1;
-    text-align: center;
-  }
-  
-  .profile-right {
-    flex: 2;
-  }
-  
-  .profile-icon {
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
-  }
-  
-  .edit-profile-btn {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  .profile-section {
-    margin: 20px 0;
-  }
-  
-  .badges-section {
-    margin-top: 30px;
-  }
-  
-  .badge-icon {
-    width: 50px;
-    height: 50px;
-    margin: 5px;
-  }
-  
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  margin-right: 20px;
+}
+
+.profile-info h1 {
+  margin: 0;
+}
+
+.followers-following {
+  display: flex;
+  gap: 15px;
+}
+
+.profile-snippet {
+  margin-top: 15px;
+}
+
+.edit-profile-section {
+  width: 100%;
+  max-width: 600px;
+}

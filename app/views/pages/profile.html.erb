@@ -1,13 +1,1 @@
-<h1>My Profile</h1>
-<div class="profile">
-  <div class="left-side">
-    <div class="icon">
-      <!-- User avatar goes here -->
-    </div>
-    <%= link_to "Edit Profile", edit_user_registration_path, class: "edit-profile-button" %>
-  </div>
-  <div class="right-side">
-    <%= link_to "My Snippets", user_snippets_path, class: "tile" %>
-    <%= link_to "My Contributions", user_contributions_path, class: "tile" %>
-  </div>
-</div>
+<%= render 'users/show' %>

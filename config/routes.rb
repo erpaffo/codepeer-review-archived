@@ -8,8 +8,8 @@ Rails.application.routes.draw do
   authenticated :user do
     root 'pages#dashboard', as: :authenticated_root
 
-    get 'profile', to: 'users#show'
-    get 'profile/edit', to: 'users#edit', as: 'edit_profile'
+    get 'profile', to: 'users#show', as: 'user_profile'
+    get 'profile/edit', to: 'users#edit', as: 'edit_user_profile'
     patch 'profile', to: 'users#update'
 
     get 'my_snippets', to: 'snippets#my_snippets'
@@ -27,7 +27,7 @@ Rails.application.routes.draw do
 
     post 'two_factor_verification/send_otp', to: 'two_factor_verifications#resend_otp', as: :two_factor_verification_send_otp
     get 'two_factor_verification', to: 'two_factor_verifications#show'
-    post 'two_factor_verification/verify', to: 'two_factor_verifications#verify', as: :two_factor_verification_verify
+    post 'two_factor_verification/verify', to: 'two_factor_verifications#verify'
   end
 
   unauthenticated do

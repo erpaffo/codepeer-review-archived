@@ -1,9 +1,10 @@
-<!-- app/views/users/show.html.erb -->
 <h1>My Profile</h1>
 <div class="profile-container">
   <div class="profile-left">
-    <%= image_tag(@user.image, alt: 'User Icon', class: 'profile-icon', onclick: 'enlargeImage(this)') %>
-    <%= link_to 'Edit Profile', edit_profile_path, class: 'edit-profile-btn' %>
+    <%= image_tag(@user.profile_picture_url, alt: 'User Icon', class: 'profile-icon', onclick: 'enlargeImage(this)') %>
+    <%= link_to 'Edit Profile', edit_user_profile_path, class: 'edit-profile-btn' %>
+    <p>Nickname: <%= @user.nickname %></p>
+    <p>Bio: <%= @user.bio %></p>
     <p>Followers: <%= @user.followers_count %></p>
     <p>Following: <%= @user.following_count %></p>
   </div>

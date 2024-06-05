@@ -1,25 +1,20 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const methodSelect = document.getElementById('two_factor_method');
-    const phoneNumberField = document.getElementById('phone_number_field');
-    const appQrCode = document.getElementById('app_qr_code');
-  
-    if (methodSelect) {
-      methodSelect.addEventListener('change', (event) => {
-        const selectedMethod = event.target.value;
-        if (selectedMethod === 'sms') {
-          phoneNumberField.style.display = 'block';
-          if (appQrCode) appQrCode.style.display = 'none';
-        } else if (selectedMethod === 'app') {
-          phoneNumberField.style.display = 'none';
-          if (appQrCode) appQrCode.style.display = 'block';
-        } else {
-          phoneNumberField.style.display = 'none';
-          if (appQrCode) appQrCode.style.display = 'none';
-        }
-      });
-  
-      // Trigger change event to set initial visibility
-      methodSelect.dispatchEvent(new Event('change'));
+document.addEventListener("DOMContentLoaded", function() {
+  const profilePictureInput = document.getElementById('profile-picture-input');
+  const profilePicturePreview = document.getElementById('profile-picture-preview');
+
+  profilePictureInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file && file.size <= 1048576) { // 1 MB limit
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        profilePicturePreview.src = e.target.result;
+        profilePicturePreview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    } else {
+      alert("Image must be less than 1MB");
+      profilePictureInput.value = ''; // Clear the input
+      profilePicturePreview.style.display = 'none';
     }
   });
-  
+});
