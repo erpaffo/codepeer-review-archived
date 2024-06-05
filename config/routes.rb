@@ -8,9 +8,19 @@ Rails.application.routes.draw do
   authenticated :user do
     root 'pages#dashboard', as: :authenticated_root
 
+    resources :projects do
+      member do
+        get :settings
+      end
+      get 'files/*file', to: 'projects#file', as: 'file'
+      patch 'files/*file', to: 'projects#update_file', as: 'update_file'
+    end
+
     get 'profile', to: 'users#show', as: 'user_profile'
     get 'profile/edit', to: 'users#edit', as: 'edit_user_profile'
     patch 'profile', to: 'users#update'
+
+    get 'code_editor', to: 'pages#code_editor'
 
     get 'my_snippets', to: 'snippets#my_snippets'
     get 'my_contribution', to: 'community#my_contribution'

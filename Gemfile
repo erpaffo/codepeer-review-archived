@@ -83,3 +83,7 @@ gem 'rqrcode_png'
 gem 'rotp'
 
 gem 'cancancan'
+
+gem 'ace-rails-ap', require: 'ace/rails'
+
+gem 'octokit'

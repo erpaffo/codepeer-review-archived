@@ -1,4 +1,4 @@
 <h1><%= @snippet.title %></h1>
-<p><%= @snippet.content %></p>
-<%= link_to 'Edit', edit_snippet_path(@snippet) %> |
-<%= link_to 'Back', snippets_path %>
+<pre><%= @snippet.content %></pre>
+<%= link_to 'Edit', edit_snippet_path(@snippet), class: 'btn btn-secondary' %>
+<%= link_to 'Back', snippets_path, class: 'btn btn-primary' %>

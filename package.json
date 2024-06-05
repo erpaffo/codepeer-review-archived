@@ -1,11 +1,15 @@
 {
   "dependencies": {
     "@rails/webpacker": "5.4.4",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^3.3.12"
+    "codemirror": "^6.0.1",
+    "webpack": "^4.47.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "webpack-dev-server": "^3"
+    "@babel/core": "^7.21.11",
+    "@babel/preset-env": "^7.21.5",
+    "babel-loader": "^8.2.5"
   }
 }

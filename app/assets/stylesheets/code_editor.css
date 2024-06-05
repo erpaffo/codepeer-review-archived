@@ -1,0 +1,23 @@
+/* app/assets/stylesheets/code_editor.css */
+.code-editor-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .project-folder {
+    width: 20%;
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
+  
+  .coding-area {
+    width: 60%;
+    padding: 10px;
+  }
+  
+  .tools-menu {
+    width: 20%;
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
+  

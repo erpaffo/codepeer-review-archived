@@ -1,0 +1,13 @@
+<h1>Edit File: <%= @file %></h1>
+
+<%= form_with(url: project_update_file_path(@project, file: @file), method: :patch, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :content %><br>
+    <%= form.text_area :content, value: @content, rows: 20, cols: 80 %>
+  </div>
+  <div class="actions">
+    <%= form.submit "Save" %>
+  </div>
+<% end %>
+
+<%= link_to 'Back to Project', @project %>

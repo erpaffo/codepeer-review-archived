@@ -1,0 +1,7 @@
+<h1>Your GitHub Repositories</h1>
+
+<ul>
+  <% @repositories.each do |repo| %>
+    <li><%= link_to repo.full_name, repository_path(repo.full_name) %></li>
+  <% end %>
+</ul>

@@ -1,0 +1,18 @@
+<h1>Editing <%= @file_path %> in <%= @repository %></h1>
+
+<%= form_with url: update_repository_file_path(@repository, @file_path), method: :patch do |form| %>
+  <div id="editor"><%= Base64.decode64(@file_content) %></div>
+  <%= form.hidden_field :content, id: 'file_content' %>
+  <%= form.submit "Save Changes" %>
+<% end %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-5tsGZz7d4c+K9ASh+z+d2u63sIHqzR2N/sMG/wdX57cZhE7HCV93fW/jn2C05p5cKz/suj2E5r0zUHHw4ikZ8A==" crossorigin="anonymous"></script>
+<script>
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/monokai");
+  editor.session.setMode("ace/mode/javascript");
+
+  document.querySelector('form').addEventListener('submit', function() {
+    document.getElementById('file_content').value = editor.getValue();
+  });
+</script>

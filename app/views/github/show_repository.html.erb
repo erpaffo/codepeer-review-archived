@@ -1,0 +1,7 @@
+<h1>Files in <%= @repository %></h1>
+
+<ul>
+  <% @files.each do |file| %>
+    <li><%= link_to file.name, edit_repository_file_path(@repository, file.path) %></li>
+  <% end %>
+</ul>

@@ -1,0 +1,21 @@
+<h1>Project Settings</h1>
+
+<%= form_with(model: @project, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Save changes', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<div class="actions">
+  <%= link_to 'Delete Project', project_path(@project), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+</div>

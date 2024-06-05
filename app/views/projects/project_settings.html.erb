@@ -1,0 +1,16 @@
+<h1>Project Settings</h1>
+
+<h2>Add Collaborator</h2>
+<%= form_with(url: add_collaborator_project_path(@project), local: true) do |form| %>
+  <div class="field">
+    <%= form.label :collaborator_email %>
+    <%= form.text_field :collaborator_email %>
+  </div>
+  <div class="actions">
+    <%= form.submit "Add Collaborator" %>
+  </div>
+<% end %>
+
+<div class="actions">
+  <%= link_to 'Delete Project', delete_project_path(@project), method: :delete, data: { confirm: 'Are you sure?' } %>
+</div>

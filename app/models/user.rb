@@ -13,6 +13,7 @@ class User < ApplicationRecord
   enum role: { user: 0, admin: 1 }
 
   has_many :snippets
+  has_many :projects, dependent: :destroy
   has_one_attached :profile_picture
 
   validate :profile_picture_validation
