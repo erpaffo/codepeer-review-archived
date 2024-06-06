@@ -1,0 +1,13 @@
+<h1>Repository: <%= @repository %></h1>
+
+<ul>
+  <% @contents.each do |content| %>
+    <li>
+      <% if content.type == 'dir' %>
+        <%= link_to content.name, repository_path(@repository, path: content.path) %>
+      <% else %>
+        <%= link_to content.name, edit_repository_file_path(@repository, content.path) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

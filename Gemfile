@@ -83,3 +83,5 @@ gem 'rqrcode_png'
 gem 'rotp'
 
 gem 'cancancan'
+
+gem 'octokit'

@@ -1,15 +1,21 @@
-<h1>Edit Snippet</h1>
-<%= form_with(model: @snippet, local: true) do |form| %>
+<h1><%= action_name.capitalize %> Snippet</h1>
+
+<%= form_with model: @snippet do |form| %>
   <div>
     <%= form.label :title %>
     <%= form.text_field :title %>
   </div>
   <div>
-    <%= form.label :content %>
-    <%= form.text_area :content %>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
   </div>
   <div>
-    <%= form.submit 'Update Snippet' %>
+    <%= form.label :content %>
+    <%= form.text_area :content, rows: 20, cols: 40 %>
+  </div>
+  <div>
+    <%= form.submit %>
   </div>
 <% end %>
+
 <%= link_to 'Back', snippets_path %>

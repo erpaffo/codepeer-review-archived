@@ -1,4 +1,6 @@
 <h1><%= @snippet.title %></h1>
-<p><%= @snippet.content %></p>
+<p><%= @snippet.description %></p>
+<pre><%= @snippet.content %></pre>
+
 <%= link_to 'Edit', edit_snippet_path(@snippet) %> |
 <%= link_to 'Back', snippets_path %>
