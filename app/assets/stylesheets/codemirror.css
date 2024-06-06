@@ -1,0 +1,3 @@
+/* CodeMirror theme and base styles */
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/dracula.css';

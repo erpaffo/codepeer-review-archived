@@ -85,3 +85,9 @@ gem 'rotp'
 gem 'cancancan'
 
 gem 'octokit'
+
+gem 'codemirror-rails'
+
+gem 'pathname'
+
+gem 'diffy'

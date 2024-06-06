@@ -1,0 +1,15 @@
+extensions:
+  rb:
+    - 'class'
+    - 'def'
+    - 'module'
+  php:
+    - '<?php'
+  xml:
+    - '<?xml'
+  js:
+    - 'function'
+  py:
+    - 'import'
+  cs:
+    - 'namespace'

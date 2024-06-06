@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: 'registrations',
@@ -48,8 +49,7 @@ Rails.application.routes.draw do
   unauthenticated do
     root 'pages#landing', as: :unauthenticated_root
   end
-
-
+  root 'pages#dashboard'
 
   resources :snippets, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 end
