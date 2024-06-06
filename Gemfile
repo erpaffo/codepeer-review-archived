@@ -88,6 +88,11 @@ gem 'octokit'
 
 gem 'codemirror-rails'
 
-gem 'pathname'
+gem 'github-linguist'
+
+gem 'mime-types'
+
 
 gem 'diffy'
+
+gem 'font-awesome-rails'

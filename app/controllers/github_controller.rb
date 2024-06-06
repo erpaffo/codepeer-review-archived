@@ -1,6 +1,3 @@
-require 'pathname'
-include FileExtensionHelper
-
 class GithubController < ApplicationController
   before_action :authenticate_user!
 
@@ -17,6 +14,7 @@ class GithubController < ApplicationController
   def edit_file
     @repository = params[:repo_id]
     @file_path = params[:file_path]
+    @file_extension = File.extname(@file_path)
     Rails.logger.info "Editing file at path: #{@file_path}"
     @file_content = fetch_file_content(@repository, @file_path)
   end
@@ -24,14 +22,20 @@ class GithubController < ApplicationController
   def update_file
     @repository = params[:repo_id]
     @file_path = params[:file_path]
+    @file_extension = File.extname(@file_path)
     new_content = params[:content]
 
-    Rails.logger.info "Updating file: #{@repository}/#{@file_path}"
+    full_path = ensure_extension(@repository, @file_path)
 
-    original_content = fetch_file_content(@repository, @file_path)
-    update_repository_file(@repository, @file_path, new_content)
+    Rails.logger.info "Updating file: #{@repository}/#{full_path}"
 
-    create_snippet(original_content, new_content, @file_path)
+    original_content = fetch_file_content(@repository, full_path)
+
+    Rails.logger.info "Full path after ensuring extension: #{full_path}"
+
+    update_repository_file(@repository, full_path, new_content)
+
+    create_snippet(original_content, new_content, full_path)
 
     redirect_to repository_path(@repository), notice: 'File was successfully updated.'
   end
@@ -59,22 +63,26 @@ class GithubController < ApplicationController
 
   def fetch_file_content(repo, path)
     client = Octokit::Client.new(access_token: current_user.token)
-    content = client.contents(repo, path: ensure_extension(path))
-    Rails.logger.info "Fetched file content for path #{path}"
+    full_path = ensure_extension(repo, path)
+    Rails.logger.info "Fetching file content for path #{full_path}"
+    content = client.contents(repo, path: full_path)
+    Rails.logger.info "Fetched file content for path #{full_path}"
     Base64.decode64(content.content)
-  rescue Octokit::NotFound
+  rescue Octokit::NotFound => e
+    Rails.logger.error "File not found when fetching content: #{repo}/#{full_path} - #{e.message}"
     ''
   end
 
   def update_repository_file(repo, path, content)
     client = Octokit::Client.new(access_token: current_user.token)
+    full_path = ensure_extension(repo, path)
     begin
-      file = client.contents(repo, path: ensure_extension(path, content))
+      file = client.contents(repo, path: full_path)
       sha = file.sha
-      Rails.logger.info "Updating file at path #{path} with sha #{sha}"
-      client.update_contents(repo, ensure_extension(path, content), "Updated #{path}", sha, content)
+      Rails.logger.info "Updating file at path #{full_path} with sha #{sha}"
+      client.update_contents(repo, full_path, "Updated #{full_path}", sha, content)
     rescue Octokit::NotFound => e
-      Rails.logger.error "File not found: #{repo}/#{path} - #{e.message}"
+      Rails.logger.error "File not found: #{repo}/#{full_path} - #{e.message}"
       raise e
     rescue Octokit::Unauthorized => e
       Rails.logger.error "Unauthorized access: #{e.message}"
@@ -93,5 +101,25 @@ class GithubController < ApplicationController
       modifications: modifications,
       file_path: file_path
     )
+  end
+
+  def ensure_extension(repo, path)
+    dir = File.dirname(path)
+    filename = File.basename(path)
+    client = Octokit::Client.new(access_token: current_user.token)
+
+    Rails.logger.info "Listing contents of directory: #{dir}"
+    contents = client.contents(repo, path: dir)
+
+    # Look for the file in the directory contents
+    file = contents.find { |item| item.name.start_with?(filename) }
+
+    if file
+      Rails.logger.info "File found: #{file.name}"
+      File.join(dir, file.name)
+    else
+      Rails.logger.error "File not found in directory listing: #{path}"
+      path # return the original path if the file is not found
+    end
   end
 end

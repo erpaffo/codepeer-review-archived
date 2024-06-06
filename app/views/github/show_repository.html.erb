@@ -2,12 +2,13 @@
 
 <ul>
   <% @contents.each do |content| %>
-    <li>
-      <% if content.type == 'dir' %>
-        <%= link_to content.name, repository_path(@repository, path: content.path) %>
-      <% else %>
-        <%= link_to content.name, edit_repository_file_path(@repository, content.path) %>
-      <% end %>
-    </li>
-  <% end %>
+  <li>
+    <% if content.type == 'dir' %>
+      <%= link_to content.name, repository_path(@repository, path: content.path) %>
+    <% else %>
+      <%= fa_icon "file-#{content.name.split('.').last}" %>
+      <%= link_to content.name, edit_repository_file_path(@repository, content.path) %>
+    <% end %>
+  </li>
+<% end %>
 </ul>
