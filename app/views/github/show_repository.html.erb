@@ -1,14 +1,16 @@
 <h1>Repository: <%= @repository %></h1>
 
 <ul>
-  <% @contents.each do |content| %>
-  <li>
-    <% if content.type == 'dir' %>
-      <%= link_to content.name, repository_path(@repository, path: content.path) %>
-    <% else %>
-      <%= fa_icon "file-#{content.name.split('.').last}" %>
-      <%= link_to content.name, edit_repository_file_path(@repository, content.path) %>
-    <% end %>
-  </li>
-<% end %>
+  <% @contents.each do |file| %>
+    <li class="file" data-filename="<%= file.name %>">
+      <% if file.type == 'dir' %>
+        <%= link_to file.name, repository_path(@repository, path: file.path) %>
+      <% else %>
+        <%= link_to file.name, edit_repository_file_path(@repository, file.path) %>
+      <% end %>
+    </li>
+  <% end %>
 </ul>
+
+<%= javascript_include_tag "application" %>
+<%= javascript_importmap_tags %>

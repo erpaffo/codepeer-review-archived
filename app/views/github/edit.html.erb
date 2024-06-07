@@ -1,10 +1,14 @@
 <h1>Editing File: <%= @file_path %></h1>
 
-<%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch) do %>
+<%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch, local: true) do %>
+  <div id="editor" style="height: 500px;"><%= @file_content %></div>
   <div>
-    <%= text_area_tag :content, @file_content, rows: 20, cols: 80 %>
+    <textarea name="content" hidden></textarea>
   </div>
   <div>
     <%= submit_tag "Save Changes" %>
   </div>
 <% end %>
+
+<%= javascript_include_tag "editor" %>
+<%= javascript_importmap_tags %>

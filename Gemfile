@@ -70,7 +70,7 @@ end
 gem 'devise'
 gem 'figaro'
 
-gem 'webpacker'
+#gem 'webpacker'
 
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
@@ -86,12 +86,9 @@ gem 'cancancan'
 
 gem 'octokit'
 
-gem 'codemirror-rails'
-
 gem 'github-linguist'
 
 gem 'mime-types'
-
 
 gem 'diffy'
 
