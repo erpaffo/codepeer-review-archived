@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_06_211127) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_08_155141) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -51,15 +51,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_211127) do
     t.integer "badge_id", null: false
   end
 
-  create_table "collaborations", force: :cascade do |t|
-    t.integer "project_id", null: false
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_collaborations_on_project_id"
-    t.index ["user_id"], name: "index_collaborations_on_user_id"
-  end
-
   create_table "follows", force: :cascade do |t|
     t.integer "follower_id"
     t.integer "followed_id"
@@ -67,30 +58,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_211127) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "projects", force: :cascade do |t|
-    t.string "name"
+  create_table "snippets", force: :cascade do |t|
+    t.string "title"
     t.text "description"
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_projects_on_user_id"
-  end
-
-  create_table "projects_users", id: false, force: :cascade do |t|
-    t.integer "project_id", null: false
-    t.integer "user_id", null: false
-    t.index ["project_id"], name: "index_projects_users_on_project_id"
-    t.index ["user_id"], name: "index_projects_users_on_user_id"
-  end
-
-  create_table "snippets", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.string "title"
-    t.string "content"
     t.text "modifications"
     t.string "file_path"
+    t.text "content"
     t.index ["user_id"], name: "index_snippets_on_user_id"
   end
 
@@ -103,8 +79,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_211127) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.string "otp_secret"
     t.integer "consumed_timestep"
@@ -117,9 +93,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_211127) do
     t.string "image"
     t.string "token"
     t.string "refresh_token"
-    t.string "otp_secret_encrypted"
-    t.string "phone"
-    t.text "otp_backup_codes"
     t.string "phone_number"
     t.boolean "two_factor_enabled"
     t.string "two_factor_method"
@@ -133,20 +106,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_211127) do
     t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.boolean "two_factor_email_enabled"
-    t.boolean "two_factor_sms_enabled"
-    t.boolean "two_factor_app_enabled"
+    t.boolean "two_factor_email_enabled", default: false
+    t.boolean "two_factor_sms_enabled", default: false
+    t.boolean "two_factor_app_enabled", default: false
     t.integer "role"
     t.text "bio"
+    t.integer "installation_id"
+    t.string "github_username"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "collaborations", "projects"
-  add_foreign_key "collaborations", "users"
-  add_foreign_key "projects", "users"
-  add_foreign_key "projects_users", "projects"
-  add_foreign_key "projects_users", "users"
+  add_foreign_key "snippets", "users"
 end

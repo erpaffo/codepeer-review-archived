@@ -17,6 +17,7 @@ class GithubController < ApplicationController
     @file_extension = File.extname(@file_path)
     Rails.logger.info "Editing file at path: #{@file_path}"
     @file_content = fetch_file_content(@repository, @file_path)
+    @contents = fetch_repository_contents(@repository, '') # Fetch root contents for sidebar
   end
 
   def update_file
@@ -35,7 +36,7 @@ class GithubController < ApplicationController
 
     update_repository_file(@repository, full_path, new_content)
 
-    create_snippet(original_content, new_content, full_path)
+    create_snippet(original_content, new_content, full_path) unless new_content.blank?
 
     redirect_to repository_path(@repository), notice: 'File was successfully updated.'
   end
@@ -94,6 +95,8 @@ class GithubController < ApplicationController
   end
 
   def create_snippet(original_content, new_content, file_path)
+    return if new_content.blank?
+
     modifications = Diffy::Diff.new(original_content, new_content, context: 1).to_s(:html)
     current_user.snippets.create!(
       title: "Changes to #{file_path}",
@@ -111,7 +114,6 @@ class GithubController < ApplicationController
     Rails.logger.info "Listing contents of directory: #{dir}"
     contents = client.contents(repo, path: dir)
 
-    # Look for the file in the directory contents
     file = contents.find { |item| item.name.start_with?(filename) }
 
     if file

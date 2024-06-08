@@ -1,13 +1,39 @@
 <h1>Editing File: <%= @file_path %></h1>
 
-<%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch, local: true) do %>
-  <div id="editor" style="height: 500px;"><%= @file_content %></div>
-  <div>
-    <textarea name="content" hidden></textarea>
+<div class="container">
+  <div class="sidebar left" id="sidebar">
+    <button id="toggle-button">Toggle Sidebar</button>
+    <h2>Files</h2>
+    <ul id="file-tree">
+      <% @contents.each do |item| %>
+        <li>
+          <% if item.type == 'dir' %>
+            <%= link_to item.name, edit_repository_file_path(@repository, item.path) %>
+          <% else %>
+            <%= link_to item.name, edit_repository_file_path(@repository, item.path) %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <div class="resizer" id="resizer-left"></div>
   </div>
-  <div>
-    <%= submit_tag "Save Changes" %>
+  <div class="main-content" id="main-content">
+    <%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch, local: true) do %>
+      <textarea id="file-content" hidden><%= @file_content %></textarea>
+      <div id="editor-container" style="height: calc(100vh - 200px); width: 100%;">
+        <div id="editor" style="height: 100%; width: 100%;"></div>
+      </div>
+      <div>
+        <textarea name="content" hidden></textarea>
+      </div>
+      <div>
+        <%= submit_tag "Save Changes" %>
+      </div>
+    <% end %>
+    <div class="resizer" id="resizer-editor"></div>
   </div>
-<% end %>
-
-
+  <div class="sidebar right" id="sidebar-right">
+    <h2>Tools</h2>
+    <div>Placeholder for tools</div>
+  </div>
+</div>

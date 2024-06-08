@@ -1,0 +1,98 @@
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  overflow-y: auto;
+  padding: 10px;
+  transition: margin-left 0.3s, width 0.3s;
+  position: relative;
+}
+
+#toggle-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+}
+
+.left {
+  border-right: 1px solid #ccc;
+  width: 200px;
+}
+
+.right {
+  border-left: 1px solid #ccc;
+  width: 150px;
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  padding: 20px;
+  overflow: hidden;
+  transition: margin-left 0.3s, width 0.3s;
+  position: relative;
+  align-items: stretch;
+}
+
+#editor-container {
+  flex-grow: 1;
+  position: relative;
+  width: 100%; /* Ensure it takes up all available space */
+}
+
+#editor {
+  width: 100%;
+  height: 100%;
+}
+
+#file-tree {
+  list-style: none;
+  padding: 0;
+}
+
+#file-tree li {
+  margin: 5px 0;
+}
+
+#file-tree a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+#file-tree a:hover {
+  text-decoration: underline;
+}
+
+.sidebar.collapsed {
+  margin-left: -200px;
+  width: 0;
+}
+
+.main-content.expanded {
+  margin-left: 0;
+}
+
+.resizer {
+  width: 5px;
+  cursor: ew-resize;
+  background-color: #ccc;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+#resizer-left {
+  right: -2.5px;
+}
+
+#resizer-editor {
+  right: -2.5px;
+}
+
+#sidebar-right {
+  width: 150px;
+}
