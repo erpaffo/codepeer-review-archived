@@ -1,0 +1,8 @@
+<!-- app/views/pages/confirm_merge_account.html.erb -->
+<h1>Confirm Account Merge</h1>
+<p>GitHub account is already connected to another account. Do you want to merge accounts?</p>
+
+<%= form_with url: merge_accounts_path, method: :post do %>
+  <%= hidden_field_tag :pending_github_user_id, session[:pending_github_user_id] %>
+  <%= submit_tag "Merge Accounts", class: 'btn btn-primary' %>
+<% end %>

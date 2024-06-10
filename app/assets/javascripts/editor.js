@@ -11,16 +11,37 @@ document.addEventListener("DOMContentLoaded", function() {
     const toggleButton = document.getElementById('toggle-button');
     const resizerLeft = document.getElementById('resizer-left');
     const resizerEditor = document.getElementById('resizer-editor');
+    const runCodeButton = document.getElementById('run-code-button');
+
+    if (!editorElement) console.error("editorElement is missing");
+    if (!editorContainerElement) console.error("editorContainerElement is missing");
+    if (!fileContentElement) console.error("fileContentElement is missing");
+    if (!sidebarElement) console.error("sidebarElement is missing");
+    if (!mainContentElement) console.error("mainContentElement is missing");
+    if (!sidebarRightElement) console.error("sidebarRightElement is missing");
+    if (!toggleButton) console.error("toggleButton is missing");
+    if (!resizerLeft) console.error("resizerLeft is missing");
+    if (!resizerEditor) console.error("resizerEditor is missing");
+    if (!runCodeButton) console.error("runCodeButton is missing");
+
+    if (!editorElement || !editorContainerElement || !fileContentElement || !sidebarElement || !mainContentElement || !sidebarRightElement || !toggleButton || !runCodeButton) {
+      console.error("One or more elements are missing from the DOM");
+      return;
+    }
+
+    console.log("All necessary elements are present in the DOM");
 
     let isResizing = false;
     let isResizingEditor = false;
     let editor;
 
-    resizerLeft.addEventListener('mousedown', function(e) {
-      isResizing = true;
-      document.addEventListener('mousemove', resizeSidebar);
-      document.addEventListener('mouseup', stopResizing);
-    });
+    if (resizerLeft) {
+      resizerLeft.addEventListener('mousedown', function(e) {
+        isResizing = true;
+        document.addEventListener('mousemove', resizeSidebar);
+        document.addEventListener('mouseup', stopResizing);
+      });
+    }
 
     function resizeSidebar(e) {
       if (isResizing) {
@@ -37,19 +58,23 @@ document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener('mouseup', stopResizing);
     }
 
-    toggleButton.addEventListener('click', function() {
-      sidebarElement.classList.toggle('collapsed');
-      mainContentElement.classList.toggle('expanded');
-      setTimeout(() => {
-        updateEditorWidth();
-      }, 300);
-    });
+    if (toggleButton) {
+      toggleButton.addEventListener('click', function() {
+        sidebarElement.classList.toggle('collapsed');
+        mainContentElement.classList.toggle('expanded');
+        setTimeout(() => {
+          updateEditorWidth();
+        }, 300);
+      });
+    }
 
-    resizerEditor.addEventListener('mousedown', function(e) {
-      isResizingEditor = true;
-      document.addEventListener('mousemove', resizeEditor);
-      document.addEventListener('mouseup', stopResizingEditor);
-    });
+    if (resizerEditor) {
+      resizerEditor.addEventListener('mousedown', function(e) {
+        isResizingEditor = true;
+        document.addEventListener('mousemove', resizeEditor);
+        document.addEventListener('mouseup', stopResizingEditor);
+      });
+    }
 
     function resizeEditor(e) {
       if (isResizingEditor) {
@@ -83,6 +108,8 @@ document.addEventListener("DOMContentLoaded", function() {
         language: 'ruby',
         theme: 'vs-dark',
       });
+
+      console.log("Monaco Editor created successfully");
 
       const form = editorElement.closest('form');
       if (form) {

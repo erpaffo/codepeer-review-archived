@@ -15,8 +15,9 @@ class GithubController < ApplicationController
     @repository = params[:repo_id]
     @file_path = params[:file_path]
     @file_extension = File.extname(@file_path)
-    Rails.logger.info "Editing file at path: #{@file_path}"
+    #Rails.logger.info "Editing file at path: #{@file_path}"
     @file_content = fetch_file_content(@repository, @file_path)
+    Rails.logger.info "File content: #{@file_content}"
     @contents = fetch_repository_contents(@repository, '') # Fetch root contents for sidebar
   end
 

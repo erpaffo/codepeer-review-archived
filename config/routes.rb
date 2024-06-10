@@ -7,12 +7,13 @@ Rails.application.routes.draw do
   }
 
   authenticated :user do
-    #Dashboard
     root 'pages#dashboard', as: :authenticated_root
     get 'community', to: 'community#index'
     get 'badges', to: 'badges#index'
     get 'resume_snippet', to: 'snippets#resume'
-    get 'connect_account', to: 'users#connect_account'
+    get 'connect_account', to: 'pages#connect_account'
+    get 'confirm_merge_account', to: 'pages#confirm_merge_account'
+    post 'merge_accounts', to: 'pages#merge_accounts'
 
     # User profile
     get 'profile', to: 'users#show', as: 'user_profile'
@@ -23,7 +24,7 @@ Rails.application.routes.draw do
     get 'my_snippets', to: 'snippets#my_snippets'
     get 'my_contribution', to: 'community#my_contribution'
 
-    #Github
+    # Github
     get 'repositories', to: 'github#repositories', as: 'user_repositories'
     get 'repositories/:id', to: 'github#show_repository', as: 'repository'
     get 'repositories/:repo_id/files/*file_path/edit', to: 'github#edit_file', as: 'edit_repository_file'
@@ -45,7 +46,7 @@ Rails.application.routes.draw do
     get 'two_factor_verification', to: 'two_factor_verifications#show'
     post 'two_factor_verification/verify', to: 'two_factor_verifications#verify'
 
-    #get 'codicon.ttf', to: redirect('https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf')
+    post 'run_code', to: 'code_execution#run_code'
   end
 
   unauthenticated do
