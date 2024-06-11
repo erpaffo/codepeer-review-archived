@@ -47,6 +47,13 @@ Rails.application.routes.draw do
     post 'two_factor_verification/verify', to: 'two_factor_verifications#verify'
 
     post 'run_code', to: 'code_execution#run_code'
+
+    # Projects
+    resources :projects, only: [:new, :create, :show, :edit, :update, :destroy] do
+      member do
+        post :upload_file
+      end
+    end
   end
 
   unauthenticated do

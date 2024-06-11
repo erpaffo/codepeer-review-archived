@@ -1,11 +1,12 @@
 # docker-images/python/Dockerfile
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 WORKDIR /code
 
-COPY requirements.txt /code/
+COPY requirements.txt .
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "code.py"]
+COPY . .
+
+ENTRYPOINT ["python", "/code/code.py"]
