@@ -15,10 +15,10 @@ class GithubController < ApplicationController
     @repository = params[:repo_id]
     @file_path = params[:file_path]
     @file_extension = File.extname(@file_path)
-    #Rails.logger.info "Editing file at path: #{@file_path}"
+    Rails.logger.info "Editing file at path: #{@file_path}"
     @file_content = fetch_file_content(@repository, @file_path)
-    Rails.logger.info "File content: #{@file_content}"
-    @contents = fetch_repository_contents(@repository, '') # Fetch root contents for sidebar
+    @contents = fetch_repository_contents(@repository, '')
+    load_packages
   end
 
   def update_file
@@ -43,6 +43,15 @@ class GithubController < ApplicationController
   end
 
   private
+
+  def load_packages
+    packages_file_path = Rails.root.join('docker-images', 'python', 'requirements.txt')
+    @available_packages = if File.exist?(packages_file_path)
+                            File.readlines(packages_file_path).map(&:strip)
+                          else
+                            []
+                          end
+  end
 
   def fetch_github_repositories
     client = Octokit::Client.new(access_token: current_user.token)
@@ -122,7 +131,7 @@ class GithubController < ApplicationController
       File.join(dir, file.name)
     else
       Rails.logger.error "File not found in directory listing: #{path}"
-      path # return the original path if the file is not found
+      path
     end
   end
 end

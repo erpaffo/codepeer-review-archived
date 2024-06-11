@@ -12,6 +12,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const resizerLeft = document.getElementById('resizer-left');
     const resizerEditor = document.getElementById('resizer-editor');
     const runCodeButton = document.getElementById('run-code-button');
+    const saveFileButton = document.getElementById('save-file-button');
+    const managePackagesButton = document.getElementById('manage-packages-button');
+    const packageManagerModal = document.getElementById('package-manager');
+    const closeButton = document.querySelector('.close-button');
+    const savePackagesButton = document.getElementById('save-packages-button');
+    const packageList = document.getElementById('package-list');
 
     if (!editorElement) console.error("editorElement is missing");
     if (!editorContainerElement) console.error("editorContainerElement is missing");
@@ -34,6 +40,30 @@ document.addEventListener("DOMContentLoaded", function() {
     let isResizing = false;
     let isResizingEditor = false;
     let editor;
+    let language = 'plaintext';
+    let packages = [];
+
+    const extensionLanguageMap = {
+      'py': 'python',
+      'rb': 'ruby',
+      'c': 'c',
+      'cpp': 'cpp',
+      'ts': 'typescript',
+      'r': 'r',
+      'kt': 'kotlin',
+      'go': 'go',
+      'rs': 'rust',
+      // Aggiungi altre estensioni e linguaggi qui se necessario
+    };
+
+    const fileExtension = (filePath) => filePath ? filePath.split('.').pop() : '';
+
+    const determineLanguage = (filePath) => {
+      const ext = fileExtension(filePath);
+      return extensionLanguageMap[ext] || 'plaintext';
+    };
+
+    language = determineLanguage(fileContentElement.dataset.filePath);
 
     if (resizerLeft) {
       resizerLeft.addEventListener('mousedown', function(e) {
@@ -105,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (editorElement && fileContentElement) {
       editor = monaco.editor.create(editorElement, {
         value: fileContentElement.value,
-        language: 'ruby',
+        language: language,
         theme: 'vs-dark',
       });
 
@@ -129,6 +159,46 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.addEventListener('resize', function() {
       updateEditorWidth();
+    });
+
+    runCodeButton.addEventListener('click', function() {
+      const code = editor.getValue();
+      const language = determineLanguage(fileContentElement.dataset.filePath);
+      const repository = fileContentElement.dataset.repository;
+
+      fetch('/run_code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ code: code, language: language, packages: packages, repository: repository })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const outputElement = document.getElementById('output');
+        outputElement.textContent = data.output;
+      });
+    });
+
+    // Package manager modal
+    managePackagesButton.addEventListener('click', function() {
+      packageManagerModal.style.display = "block";
+    });
+
+    closeButton.addEventListener('click', function() {
+      packageManagerModal.style.display = "none";
+    });
+
+    window.addEventListener('click', function(event) {
+      if (event.target == packageManagerModal) {
+        packageManagerModal.style.display = "none";
+      }
+    });
+
+    savePackagesButton.addEventListener('click', function() {
+      packages = Array.from(document.querySelectorAll('input[name="packages[]"]:checked')).map(el => el.value);
+      packageManagerModal.style.display = "none";
     });
   });
 });

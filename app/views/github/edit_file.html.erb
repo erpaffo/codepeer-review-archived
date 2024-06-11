@@ -32,16 +32,42 @@
         <textarea name="content" hidden></textarea>
       <% end %>
       <button id="run-code-button" class="run-code">Run Code</button>
+      <button id="manage-packages-button" class="manage-packages">Manage Packages</button>
     </div>
-    <textarea id="file-content" hidden><%= @file_content %></textarea>
+    <textarea id="file-content" hidden data-file-path="<%= @file_path %>" data-repository="<%= @repository %>"><%= @file_content %></textarea>
     <div id="editor-container" style="height: calc(100vh - 200px); width: 100%;">
       <div id="editor" style="height: 100%; width: 100%;"></div>
     </div>
-    <div id="output" class="output"></div>
+    <div id="output-container" class="output-container">
+      <h2>Output</h2>
+      <pre id="output" class="output"></pre>
+    </div>
     <div class="resizer" id="resizer-editor"></div>
   </div>
   <div class="sidebar right" id="sidebar-right">
     <h2>Tools</h2>
     <div>Placeholder for tools</div>
+  </div>
+</div>
+
+<div id="package-manager" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2>Manage Packages</h2>
+    <% if @available_packages.any? %>
+      <ul id="package-list">
+        <% @available_packages.each do |package| %>
+          <li>
+            <label>
+              <input type="checkbox" name="packages[]" value="<%= package %>">
+              <%= package %>
+            </label>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No packages available.</p>
+    <% end %>
+    <button id="save-packages-button">Save Packages</button>
   </div>
 </div>
