@@ -24,6 +24,9 @@ Rails.application.routes.draw do
     get 'my_snippets', to: 'snippets#my_snippets'
     get 'my_contribution', to: 'community#my_contribution'
 
+    # Activities
+    get 'recent_activities', to: 'pages#recent_activities'
+
     # Github
     get 'repositories', to: 'github#repositories', as: 'user_repositories'
     get 'repositories/:id', to: 'github#show_repository', as: 'repository'

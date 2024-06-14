@@ -1,4 +1,3 @@
-# app/controllers/github_controller.rb
 class GithubController < ApplicationController
   before_action :authenticate_user!
 
@@ -19,6 +18,10 @@ class GithubController < ApplicationController
     Rails.logger.info "Editing file at path: #{@file_path}"
     @file_content = fetch_file_content(@repository, @file_path)
     @contents = fetch_repository_contents(@repository, '') # Fetch root contents for sidebar
+
+    if @file_content.nil? || @file_content.empty?
+      flash[:alert] = "File content is missing."
+    end
   end
 
   def update_file
@@ -35,11 +38,19 @@ class GithubController < ApplicationController
 
     Rails.logger.info "Full path after ensuring extension: #{full_path}"
 
-    update_repository_file(@repository, full_path, new_content)
+    begin
+      update_repository_file(@repository, full_path, new_content)
+      create_snippet(original_content, new_content, full_path) unless new_content.blank?
 
-    create_snippet(original_content, new_content, full_path) unless new_content.blank?
+      # Aggiungi questa riga per creare un'attività quando un file viene modificato
+      Activity.create(user: current_user, description: "Modified file #{@file_path} in repository #{@repository}")
 
-    redirect_to repository_path(@repository), notice: 'File was successfully updated.'
+      redirect_to repository_path(@repository), notice: 'File was successfully updated.'
+    rescue => e
+      Rails.logger.error "Error updating file: #{e.message}"
+      flash[:alert] = "Failed to update file. #{e.message}"
+      redirect_to edit_file_path(repo_id: @repository, file_path: @file_path)
+    end
   end
 
   private

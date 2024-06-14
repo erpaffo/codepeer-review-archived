@@ -28,9 +28,9 @@
   </div>
   <div class="main-content" id="main-content">
     <div class="top-bar">
-      <%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch, local: true) do %>
+      <%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch, local: true, id: 'editor-form') do %>
         <button id="save-file-button" type="submit">Save File</button>
-        <textarea name="content" hidden></textarea>
+        <%= hidden_field_tag :content, @file_content, id: "file-content-hidden" %>
       <% end %>
       <button id="run-code-button" class="run-code">Run Code</button>
     </div>

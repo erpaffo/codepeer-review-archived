@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const resizerEditor = document.getElementById('resizer-editor');
     const runCodeButton = document.getElementById('run-code-button');
     const saveFileButton = document.getElementById('save-file-button');
+    const form = document.getElementById('editor-form');
 
     if (!editorElement) console.error("editorElement is missing");
     if (!editorContainerElement) console.error("editorContainerElement is missing");
@@ -129,16 +130,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (editorElement && fileContentElement) {
       editor = monaco.editor.create(editorElement, {
-        value: fileContentElement.value,
+        value: fileContentElement.textContent,
         language: language,
         theme: 'vs-dark',
       });
 
       console.log("Monaco Editor created successfully");
 
-      const form = editorElement.closest('form');
+      // Aggiorna il campo nascosto con il contenuto dell'editor prima di inviare il modulo
       if (form) {
-        const contentField = form.querySelector('textarea[name="content"]');
+        const contentField = document.getElementById('file-content-hidden');
         if (contentField) {
           form.addEventListener('submit', function() {
             contentField.value = editor.getValue();

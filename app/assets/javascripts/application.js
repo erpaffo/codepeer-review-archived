@@ -1,6 +1,4 @@
-// app/assets/javascripts/application.js
-import "editor";
-
+import "editor"
 document.addEventListener("DOMContentLoaded", function() {
   console.log("JavaScript loaded!");
 });

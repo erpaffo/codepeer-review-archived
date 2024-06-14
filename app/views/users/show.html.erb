@@ -15,6 +15,9 @@
     <div class="profile-section">
       <%= link_to 'My Contribution', my_contribution_path, class: 'profile-link' %>
     </div>
+    <div class="profile-section">
+      <%= link_to 'Recent Activities', recent_activities_path, class: 'profile-link' %>
+    </div>
   </div>
   <div class="badges-section">
     <h2>Badges (Overview)</h2>
@@ -26,7 +29,6 @@
 
 <script>
   function enlargeImage(img) {
-    // Simple script to enlarge the profile icon when clicked
     img.style.width = "200px";
     img.style.height = "200px";
   }

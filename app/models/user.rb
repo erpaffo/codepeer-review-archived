@@ -14,6 +14,7 @@ class User < ApplicationRecord
 
   has_many :snippets
   has_one_attached :profile_picture
+  has_many :activities, dependent: :destroy
 
   validate :profile_picture_validation
 
