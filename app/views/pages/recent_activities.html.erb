@@ -3,7 +3,13 @@
   <% if @recent_activities.any? %>
     <% @recent_activities.each do |activity| %>
       <div class="activity">
-        <p><%= activity.description %></p>
+        <p>
+          <% if activity.repository.present? && activity.file_path.present? %>
+            <%= link_to activity.description, edit_repository_file_path(repo_id: activity.repository, file_path: activity.file_path) %>
+          <% else %>
+            <%= activity.description %>
+          <% end %>
+        </p>
         <p><%= activity.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
       </div>
     <% end %>
