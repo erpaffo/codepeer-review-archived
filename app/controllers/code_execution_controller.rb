@@ -1,12 +1,12 @@
-# app/controllers/code_execution_controller.rb
 class CodeExecutionController < ApplicationController
   protect_from_forgery with: :null_session
 
   def run_code
     code = params[:code]
-    language = detect_language_from_file_path(params[:file_path])
+    file_path = params[:file_path]
     repository = params[:repository]
 
+    language = detect_language_from_file_path(file_path)
     output = execute_code_in_docker(code, language, repository)
 
     render json: { output: output }
@@ -48,9 +48,27 @@ class CodeExecutionController < ApplicationController
       download_repository(repository, dir)
 
       docker_image = language_docker_image(language)
-      command = "docker run --rm -v #{dir}:/code #{docker_image} /code/code.#{language_extension(language)}"
+      case language
+      when 'c'
+        compile_command = "docker run --rm -v #{dir}:/code #{docker_image} gcc /code/code.c -o /code/code.out && chmod +x #{dir}/code.out"
+        compile_output = `#{compile_command}`
+        run_command = "docker run --rm -v #{dir}:/code #{docker_image} /code/code.out"
+        output = `#{run_command}`
+      when 'cpp'
+        compile_command = "docker run --rm -v #{dir}:/code #{docker_image} g++ /code/code.cpp -o /code/code.out && chmod +x #{dir}/code.out"
+        compile_output = `#{compile_command}`
+        run_command = "docker run --rm -v #{dir}:/code #{docker_image} /code/code.out"
+        output = `#{run_command}`
+      when 'rust'
+        compile_command = "docker run --rm -v #{dir}:/code #{docker_image} rustc /code/code.rs -o /code/code.out && chmod +x #{dir}/code.out"
+        compile_output = `#{compile_command}`
+        run_command = "docker run --rm -v #{dir}:/code #{docker_image} /code/code.out"
+        output = `#{run_command}`
+      else
+        run_command = "docker run --rm -v #{dir}:/code #{docker_image} /code/code.#{language_extension(language)}"
+        output = `#{run_command}`
+      end
 
-      output = `#{command}`
       output
     end
   end

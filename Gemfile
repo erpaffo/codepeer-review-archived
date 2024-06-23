@@ -67,16 +67,19 @@ group :test do
   gem "webdrivers"
 end
 
+# Gestisce l'utente
 gem 'devise'
+# Gestisce le credenziali nel file applcation.yml
 gem 'figaro'
 
-#gem 'webpacker'
 
+# OAuth
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'
 
+# Autenticazione a due fattori
 gem 'twilio-ruby'
 gem 'rqrcode'
 gem 'rqrcode_png'
@@ -84,9 +87,11 @@ gem 'rotp'
 
 gem 'cancancan'
 
+# Gestisce Github API
 gem 'octokit'
 
-gem 'github-linguist'
+# Permette di riconoscere il lunguaggio di programmazione utilizzato nell'editor di codice
+gem 'rouge'
 
 gem 'mime-types'
 

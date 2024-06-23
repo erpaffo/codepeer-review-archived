@@ -1,5 +1,4 @@
-<!-- app/views/github/edit_file.html.erb -->
-<h1>Editing File: <%= @file_path %></h1>
+<h1>Editing File: <%= @file.name %></h1>
 
 <% if @file_content.blank? %>
   <p>File content is missing.</p>
@@ -13,11 +12,7 @@
       <% if @contents.present? %>
         <% @contents.each do |item| %>
           <li>
-            <% if item.type == 'dir' %>
-              <%= link_to item.name, edit_repository_file_path(@repository, item.path) %>
-            <% else %>
-              <%= link_to item.name, edit_repository_file_path(@repository, item.path) %>
-            <% end %>
+            <%= link_to item.name, edit_file_project_path(@project, file_id: item.id) %>
           </li>
         <% end %>
       <% else %>
@@ -28,15 +23,13 @@
   </div>
   <div class="main-content" id="main-content">
     <div class="top-bar">
-      <%= form_with(url: update_repository_file_path(@repository, @file_path), method: :patch, local: true, id: 'editor-form') do %>
+      <%= form_with(url: update_file_project_path(@project, file_id: @file.id), method: :patch, local: true, id: 'editor-form') do %>
         <button id="save-file-button" type="submit">Save File</button>
         <%= hidden_field_tag :content, @file_content, id: "file-content-hidden" %>
-        <%= hidden_field_tag :file_extension, @file_extension, id: "file-extension-hidden" %>
-        <%= hidden_field_tag :file_path, @file_path, id: "file-path-hidden" %> <!-- New hidden field -->
       <% end %>
       <button id="run-code-button" class="run-code">Run Code</button>
     </div>
-    <textarea id="file-content" hidden data-file-path="<%= @file_path %>" data-repository="<%= @repository %>"><%= @file_content %></textarea>
+    <textarea id="file-content" hidden data-file-path="<%= @file.path %>" data-project="<%= @project.id %>"><%= @file_content %></textarea>
     <div id="editor-container" style="height: calc(100vh - 200px); width: 100%;">
       <div id="editor" style="height: 100%; width: 100%;"></div>
     </div>
@@ -51,4 +44,3 @@
     <div>Placeholder for tools</div>
   </div>
 </div>
-
