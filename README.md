@@ -64,13 +64,23 @@ Per eseguire il progetto bisogna:
    MAILER_EMAIL: ""
    ```
 2. Assicurarsi di avere i seguenti pacchetti: `nodejs`, per poter eseguire javascript, e `yarn` o `npm`, per installare i pacchetti javascript
-3. Eseguire i seguenti comandi per completare il setup:
+3. Creare i container per eseguire il codice dai Dockerfile:
+   ```bash
+   docker build -t my-c-runner -f docker-images/c/Dockerfile .
+   docker build -t my-cpp-runner -f docker-images/cpp/Dockerfile .
+   docker build -t my-python-runner -f docker-images/python/Dockerfile .
+   docker build -t my-ruby-runner -f docker-images/ruby/Dockerfile .
+   docker build -t my-rust-runner -f docker-images/rust/Dockerfile .
+   # Per il terminale interattivo:
+   docker build -t terminal-runner -f docker-images/terminal-runner/Dockerfile .
+   ```
+5. Eseguire i seguenti comandi per completare il setup:
    ```bash
    bundle install # -> installa tutte le gemme
    yarn install #oppure "npm install" ->  installa tutti i pacchetti javascript presenti nel file *package.json*
    rails db:migrate # -> crea il database eseguendo le migrazioni
    ```
-4. Eseguire il server
+6. Eseguire il server
    ```bash
    rails server
    ```
