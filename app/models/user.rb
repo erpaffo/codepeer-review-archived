@@ -12,6 +12,7 @@ class User < ApplicationRecord
   validates :terms_of_service, acceptance: true, on: :create
   enum role: { user: 0, admin: 1 }
 
+  has_many :projects, dependent: :destroy
   has_many :snippets
   has_one_attached :profile_picture
   has_many :activities, dependent: :destroy

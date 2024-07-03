@@ -1,9 +1,16 @@
-<h1><%= @project.name %></h1>
-<p><%= @project.description %></p>
+<p>
+  <strong>Name:</strong>
+  <%= @project.name %>
+</p>
 
-<h2>Files</h2>
+<p>
+  <strong>Description:</strong>
+  <%= @project.description %>
+</p>
+
+<h3>Files</h3>
 <ul>
   <% @project.files.each do |file| %>
-    <li><%= link_to file.filename.to_s, url_for(file) %></li>
+    <li><%= link_to file.filename, url_for(file) %></li>
   <% end %>
 </ul>

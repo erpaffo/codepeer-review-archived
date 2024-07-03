@@ -1,6 +1,15 @@
-<h1>New Project</h1>
+<%= form_with model: @project, local: true do |form| %>
+  <% if @project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+      <ul>
+        <% @project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<%= form_with(model: @project, local: true) do |form| %>
   <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
@@ -12,16 +21,11 @@
   </div>
 
   <div class="field">
-    <%= form.label :readme %>
-    <%= form.check_box :readme %>
-  </div>
-
-  <div class="field">
-    <%= form.label :files, "Files to include" %>
+    <%= form.label :files %>
     <%= form.file_field :files, multiple: true %>
   </div>
 
   <div class="actions">
-    <%= form.submit "Create Project" %>
+    <%= form.submit %>
   </div>
 <% end %>

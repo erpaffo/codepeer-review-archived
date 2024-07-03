@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   }
 
   authenticated :user do
-    root 'pages#dashboard', as: :authenticated_root
+    root 'dashboard#index', as: :authenticated_root
     get 'community', to: 'community#index'
     get 'badges', to: 'badges#index'
     get 'resume_snippet', to: 'snippets#resume'
@@ -51,11 +51,7 @@ Rails.application.routes.draw do
     post 'run_code', to: 'code_execution#run_code'
 
     # Projects
-    resources :projects, only: [:new, :create, :show, :edit, :update, :destroy] do
-      member do
-        post :upload_file
-      end
-    end
+    resources :projects, only: [:new, :create, :show, :index]
   end
 
   unauthenticated do
