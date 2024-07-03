@@ -98,3 +98,9 @@ gem 'mime-types'
 gem 'diffy'
 
 gem 'font-awesome-rails'
+
+# Storing file projects
+gem 'aws-sdk-s3', require: false
+gem 'activestorage'
+
+gem 'faraday-retry'

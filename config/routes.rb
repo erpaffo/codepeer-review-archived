@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     post 'run_code', to: 'code_execution#run_code'
 
     # Projects
-    resources :projects, only: [:new, :create, :show, :index]
+    resources :projects, only: [:new, :create, :show, :index, :destroy]
   end
 
   unauthenticated do

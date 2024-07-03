@@ -22,6 +22,15 @@ class ProjectsController < ApplicationController
     @projects = current_user.projects
   end
 
+  def destroy
+    @project = current_user.projects.find(params[:id])
+    @project.destroy
+    respond_to do |format|
+      format.html { redirect_to projects_url, notice: 'Project was successfully deleted.' }
+      format.json { head :no_content }
+    end
+  end
+
   private
 
   def project_params
