@@ -16,16 +16,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const saveFileButton = document.getElementById('save-file-button');
     const form = document.getElementById('editor-form');
 
-    if (!editorElement) console.error("editorElement is missing");
-    if (!editorContainerElement) console.error("editorContainerElement is missing");
-    if (!fileContentElement) console.error("fileContentElement is missing");
-    if (!sidebarElement) console.error("sidebarElement is missing");
-    if (!mainContentElement) console.error("mainContentElement is missing");
-    if (!sidebarRightElement) console.error("sidebarRightElement is missing");
-    if (!toggleButton) console.error("toggleButton is missing");
-    if (!resizerLeft) console.error("resizerLeft is missing");
-    if (!resizerEditor) console.error("resizerEditor is missing");
-    if (!runCodeButton) console.error("runCodeButton is missing");
+    //if (!editorElement) console.error("editorElement is missing");
+    //if (!editorContainerElement) console.error("editorContainerElement is missing");
+    //if (!fileContentElement) console.error("fileContentElement is missing");
+    //if (!sidebarElement) console.error("sidebarElement is missing");
+    //if (!mainContentElement) console.error("mainContentElement is missing");
+    //if (!sidebarRightElement) console.error("sidebarRightElement is missing");
+    //if (!toggleButton) console.error("toggleButton is missing");
+    //if (!resizerLeft) console.error("resizerLeft is missing");
+    //if (!resizerEditor) console.error("resizerEditor is missing");
+    //if (!runCodeButton) console.error("runCodeButton is missing");
 
     if (!editorElement || !editorContainerElement || !fileContentElement || !sidebarElement || !mainContentElement || !sidebarRightElement || !toggleButton || !runCodeButton) {
       console.error("One or more elements are missing from the DOM");

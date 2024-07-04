@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus";
-import * as ActiveStorage from "@rails/activestorage";
+import { DirectUpload } from "@rails/activestorage";
 
 export default class extends Controller {
   static targets = ["input", "attachments"];
-  
+
   connect() {
     this.inputTarget.addEventListener("change", (event) => {
       this.uploadFiles(event.target.files);
@@ -12,7 +12,7 @@ export default class extends Controller {
 
   uploadFiles(files) {
     Array.from(files).forEach((file) => {
-      const upload = new ActiveStorage.DirectUpload(file, this.directUploadUrl);
+      const upload = new DirectUpload(file, this.directUploadUrl);
       upload.create((error, blob) => {
         if (error) {
           console.error(error);
